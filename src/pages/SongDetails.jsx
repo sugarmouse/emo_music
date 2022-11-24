@@ -3,31 +3,52 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DetailsHeader, Error, Loader, RelatedSongs } from '../components';
 
 import { setActiveSong, playPause } from '../redux/features/playerSlice';
-import { useGetSongDetailsQuery } from '../redux/services/shazamCore';
+import { useGetSongDetailsQuery, useGetSongRelatedQuery } from '../redux/services/shazamCore';
 
 const SongDetails = () => {
   const dispatch = useDispatch();
   const { songid } = useParams();
-  const { setActiveSong, isPlaying } = useSelector((state) => state.player);
+  const { activeSong, setActiveSong, isPlaying } = useSelector((state) => state.player);
 
   const { data: songData, isFetching: isFetchingSongDetails } = useGetSongDetailsQuery({ songid });
+  const { data: relatedSongs, isFetching: isFectchingRelatedSOngs, error } = useGetSongRelatedQuery({ songid });
 
-  console.log(songData);
+  const handlePauseClick = () => {
+    dispatch(playPause(false));
+  };
+
+  const handlePlayClick = (song, i) => {
+    // TODO here is a bug about setActiveSong
+    dispatch(setActiveSong({ song, data: relatedSongs, i }));
+    dispatch(playPause(true));
+  };
+
+  if (isFetchingSongDetails || isFetchingSongDetails) return <Loader title="Searching song details " />;
+  if (error) return <Error />;
 
   return (
     <div className="flex flex-col">
-      {/* <DetailsHeader artistId={artistId} songData={songData} /> */}
+      <DetailsHeader songData={songData} />
 
       <div className="mb-10">
         <h2 className="text-white text-3xl font-bold">Lyrics:</h2>
         <div className="mt-5">
           {songData?.sections[1].type === 'LYRICS'
             ? songData?.sections[1].text.map((line, i) => (
-              <p className="text-gray-400 text-base my-1">{line}</p>
+              <p key={i} className="text-gray-400 text-base my-1">{line}</p>
             ))
             : <p className="text-gray-400 text-base my-1">Sorry, no lyrics found</p>}
         </div>
       </div>
+
+      <RelatedSongs
+        data={relatedSongs}
+        isFectchingRelatedSOngs={isFectchingRelatedSOngs}
+        isPlaying={isPlaying}
+        activeSong={activeSong}
+        handlePauseClick={handlePauseClick}
+        handlePlayClick={handlePlayClick}
+      />
     </div>
   );
 };
