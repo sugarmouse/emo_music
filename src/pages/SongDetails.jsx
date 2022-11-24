@@ -11,7 +11,7 @@ const SongDetails = () => {
   const { activeSong, setActiveSong, isPlaying } = useSelector((state) => state.player);
 
   const { data: songData, isFetching: isFetchingSongDetails } = useGetSongDetailsQuery({ songid });
-  const { data: relatedSongs, isFetching: isFectchingRelatedSOngs, error } = useGetSongRelatedQuery({ songid });
+  const { data: relatedSongs, isFetching: isFectchingRelatedSongs, error } = useGetSongRelatedQuery({ songid });
 
   const handlePauseClick = () => {
     dispatch(playPause(false));
@@ -43,7 +43,7 @@ const SongDetails = () => {
 
       <RelatedSongs
         data={relatedSongs}
-        isFectchingRelatedSOngs={isFectchingRelatedSOngs}
+        isFectchingRelatedSongs={isFectchingRelatedSongs}
         isPlaying={isPlaying}
         activeSong={activeSong}
         handlePauseClick={handlePauseClick}
