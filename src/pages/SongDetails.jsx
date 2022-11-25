@@ -8,7 +8,7 @@ import { useGetSongDetailsQuery, useGetSongRelatedQuery } from '../redux/service
 const SongDetails = () => {
   const dispatch = useDispatch();
   const { songid } = useParams();
-  const { activeSong, setActiveSong, isPlaying } = useSelector((state) => state.player);
+  const { activeSong, isPlaying } = useSelector((state) => state.player);
 
   const { data: songData, isFetching: isFetchingSongDetails } = useGetSongDetailsQuery({ songid });
   const { data: relatedSongs, isFetching: isFectchingRelatedSongs, error } = useGetSongRelatedQuery({ songid });

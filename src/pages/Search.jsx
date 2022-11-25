@@ -11,8 +11,6 @@ const Search = () => {
   const { data, isFetching, error } = useGetSongsBySearchQuery(searchTerm);
   const songs = data?.tracks?.hits?.map((song) => song.track);
 
-  console.log(error);
-
   if (isFetching) return <Loader title="Loading songs" />;
   if (error) return <Error />;
 
